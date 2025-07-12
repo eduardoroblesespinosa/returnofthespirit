@@ -1,0 +1,421 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return of the Spirit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d4c4f5;
+            --secondary-color: #886fbf;
+            --background-color: #0c0a1f;
+            --text-color: #e0e0e0;
+            --glow-color: rgba(212, 196, 245, 0.7);
+        }
+
+        body {
+            background-color: var(--background-color);
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-color);
+            font-family: 'Jost', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(12, 10, 31, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid var(--secondary-color);
+            box-shadow: 0 0 30px var(--glow-color);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--glow-color);
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            line-height: 1.8;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 1em auto;
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--primary-color);
+            padding: 15px 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            color: var(--background-color);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+        
+        .question-options button {
+            display: block;
+            width: 80%;
+            max-width: 500px;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 1em;
+            font-family: 'Jost', sans-serif;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-options button:hover {
+            background: var(--secondary-color);
+            border-color: var(--primary-color);
+        }
+
+        #analysis-screen .spinner {
+            border: 8px solid rgba(255,255,255,0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1.2s linear infinite;
+            margin: 40px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .result-section {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        #soul-symbol {
+            max-width: 80%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 3px solid var(--secondary-color);
+            box-shadow: 0 0 25px var(--glow-color);
+            margin-top: 20px;
+            object-fit: cover;
+        }
+
+        #play-name-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 2rem;
+            cursor: pointer;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        #play-name-btn:hover {
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1>Return of the Spirit</h1>
+            <p>This is not a game. It is a tool for remembering. Every human being is a starseed with dormant memory. "Return of the Spirit" is the mirror of the soul before birth, and the map of return to its sacred destiny in this new world. Are you ready to remember?</p>
+            <button id="start-btn" class="btn">Begin the Journey</button>
+        </div>
+
+        <!-- Scan Screen -->
+        <div id="scan-screen" class="screen">
+            <h2 id="question-title"></h2>
+            <p id="question-text"></p>
+            <div id="question-options" class="question-options"></div>
+        </div>
+
+        <!-- Analysis Screen -->
+        <div id="analysis-screen" class="screen">
+            <h2>Analyzing Your Resonance</h2>
+            <p>We are attuning to your unique cosmic frequency. Please remain open as we mirror your soul's essence.</p>
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <h1>Your Soul Profile is Revealed</h1>
+            
+            <div class="result-section">
+                <h2>Your Original Spirit Name is:</h2>
+                <h3 id="spirit-name"></h3>
+                <button id="play-name-btn" title="Hear your name">🔊</button>
+            </div>
+
+            <div class="result-section">
+                <h2>Your Primary Soul Energy:</h2>
+                <h3 id="soul-energy-type"></h3>
+                <p id="soul-energy-subcategory"></p>
+            </div>
+
+             <div class="result-section">
+                <h2>Your Soul Symbol:</h2>
+                <p>This is the sacred geometric emblem of your spirit. A unique talisman representing your energy, role, and cosmic frequency.</p>
+                <img id="soul-symbol" src="" alt="Your Personalized Soul Symbol">
+            </div>
+
+            <div class="result-section">
+                <h2>Your Purpose in the New Society:</h2>
+                <h3 id="purpose-role"></h3>
+                <p><strong>Your Main Gifts:</strong> <span id="purpose-gifts"></span></p>
+                <p><strong>Energetic Recommendations:</strong> <span id="purpose-recommendations"></span></p>
+            </div>
+
+            <p>Embrace this knowledge. It is the key to unlocking your fullest potential and stepping into your sacred destiny. Your journey of remembering has just begun.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const screens = {
+            welcome: document.getElementById('welcome-screen'),
+            scan: document.getElementById('scan-screen'),
+            analysis: document.getElementById('analysis-screen'),
+            results: document.getElementById('results-screen'),
+        };
+
+        const startBtn = document.getElementById('start-btn');
+        
+        const questionTitleEl = document.getElementById('question-title');
+        const questionTextEl = document.getElementById('question-text');
+        const questionOptionsEl = document.getElementById('question-options');
+
+        const spiritNameEl = document.getElementById('spirit-name');
+        const soulEnergyTypeEl = document.getElementById('soul-energy-type');
+        const soulEnergySubcategoryEl = document.getElementById('soul-energy-subcategory');
+        const soulSymbolImg = document.getElementById('soul-symbol');
+        const purposeRoleEl = document.getElementById('purpose-role');
+        const purposeGiftsEl = document.getElementById('purpose-gifts');
+        const purposeRecommendationsEl = document.getElementById('purpose-recommendations');
+        const playNameBtn = document.getElementById('play-name-btn');
+
+        const clickAudio = new Audio('click.mp3');
+        const revealAudio = new Audio('reveal.mp3');
+        let nameAudio = null;
+        
+        const questions = [
+            {
+                title: "Gaze Inward",
+                question: "When you close your eyes and look within, what vision emerges from the quiet dark?",
+                options: [
+                    "A raging, purifying bonfire.",
+                    "A tranquil, infinitely deep ocean.",
+                    "A shimmering cave of luminous crystals.",
+                    "A swirling vortex of nebulae and stars.",
+                    "A silent, vast space, pregnant with potential."
+                ]
+            },
+            {
+                title: "Face the Shadow",
+                question: "A challenge rises before you like a mountain. How do you approach its ascent?",
+                options: [
+                    "With direct, focused, and passionate action.",
+                    "By adapting, yielding, and flowing around the obstacle.",
+                    "With steady, patient, and unyielding persistence.",
+                    "With sharp intellect, new ideas, and clear communication.",
+                    "By seeking guidance from intuition and higher consciousness."
+                ]
+            },
+            {
+                title: "World's Heartbeat",
+                question: "What is your deepest, most sincere desire for the collective soul of the world?",
+                options: [
+                    "To ignite transformation and inspire courageous creation.",
+                    "To soothe wounds and bring profound peace and healing.",
+                    "To build lasting foundations of safety and stability.",
+                    "To uncover hidden truths and share liberating knowledge.",
+                    "To connect all of humanity back to the divine source."
+                ]
+            },
+            {
+                title: "Soul's Landscape",
+                question: "Which sacred landscape echoes the geography of your soul?",
+                options: [
+                    "A sun-drenched, active volcano, pulsing with power.",
+                    "A mist-covered, mysterious coastline at twilight.",
+                    "An ancient, mossy forest, silent and wise.",
+                    "A windswept, high mountain peak, touching the sky.",
+                    "The vast, star-filled emptiness of the cosmic void."
+                ]
+            },
+            {
+                title: "Resonant Frequency",
+                question: "What sound attunes you to your truest self?",
+                options: [
+                    "The crackle of fire and the beat of a primal drum.",
+                    "The gentle lapping of waves and the tone of a singing bowl.",
+                    "The deep, resonant hum of the earth itself.",
+                    "The celestial whisper of wind through chimes.",
+                    "The profound, potent silence between notes."
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+
+        function switchScreen(screenName) {
+            for (const key in screens) {
+                screens[key].classList.remove('active');
+            }
+            screens[screenName].classList.add('active');
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const q = questions[currentQuestionIndex];
+                questionTitleEl.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}: ${q.title}`;
+                questionTextEl.textContent = q.question;
+                questionOptionsEl.innerHTML = '';
+                q.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.onclick = () => selectAnswer(option);
+                    questionOptionsEl.appendChild(button);
+                });
+            } else {
+                beginAnalysis();
+            }
+        }
+
+        function selectAnswer(option) {
+            clickAudio.play();
+            userAnswers.push({ question: questions[currentQuestionIndex].question, answer: option });
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+
+        async function beginAnalysis() {
+            switchScreen('analysis');
+            revealAudio.play();
+
+            const systemPrompt = `You are a mystical oracle named 'The Mirror of the Soul'. You interpret symbolic choices to reveal a person's spiritual essence. Based on the user's answers, you will determine their soul profile. Respond ONLY with a JSON object following this schema, with no other text:
+{
+  "soulEnergy": {
+    "type": "Creative Fire | Healing Water | Building Earth | Revealing Air | Channeling Ether",
+    "subcategory": "A poetic, symbolic title like 'Warrior of Light', 'Weaver of Time', 'Guardian of Portals', 'Singer of Destiny', etc."
+  },
+  "spiritName": "A unique, ancient-sounding, and symbolic name like Aharion, Lysena, Vok'tal, Zha'reth, or Kaelion.",
+  "purpose": {
+    "role": "A short, inspiring description of their role in the collective awakening.",
+    "gifts": "A concise list of their main spiritual gifts.",
+    "recommendations": "Recommendations for energetic practices or spiritual paths."
+  },
+  "symbolPrompt": "A detailed, visual description for an AI image generator to create a unique sacred geometry symbol representing the user's entire profile. Be specific about shapes, colors, and feelings. For example: 'A glowing mandala of a central radiant sun (Creative Fire) with interwoven silver threads (Weaver of Time), using colors of gold, magenta, and deep indigo. The style should be luminous, cosmic, and intricate.'"
+}`;
+
+            const userPrompt = "The user made the following choices:\n" + userAnswers.map((a, i) => `Q${i+1}: ${a.answer}`).join('\n');
+            
+            try {
+                const completion = await websim.chat.completions.create({
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: userPrompt }
+                    ],
+                    json: true,
+                });
+
+                const result = JSON.parse(completion.content);
+                
+                const imageResult = await websim.imageGen({
+                    prompt: result.symbolPrompt,
+                    aspect_ratio: "1:1"
+                });
+
+                const ttsResult = await websim.textToSpeech({
+                    text: result.spiritName,
+                    voice: "en-male" // A generic, deep voice
+                });
+                
+                nameAudio = new Audio(ttsResult.url);
+                displayResults(result, imageResult.url);
+
+            } catch (error) {
+                console.error("Error during spiritual analysis:", error);
+                screens.analysis.innerHTML = `<h2>An Unexpected Silence</h2><p>There was an interference in the cosmic signal. Please refresh the page to try again.</p><p>Error: ${error.message}</p>`;
+            }
+        }
+
+        function displayResults(data, imageUrl) {
+            spiritNameEl.textContent = data.spiritName;
+            soulEnergyTypeEl.textContent = data.soulEnergy.type;
+            soulEnergySubcategoryEl.textContent = data.soulEnergy.subcategory;
+            purposeRoleEl.textContent = data.purpose.role;
+            purposeGiftsEl.textContent = data.purpose.gifts;
+            purposeRecommendationsEl.textContent = data.purpose.recommendations;
+            soulSymbolImg.src = imageUrl;
+            soulSymbolImg.alt = data.symbolPrompt;
+
+            switchScreen('results');
+            revealAudio.play();
+        }
+        
+        startBtn.addEventListener('click', () => {
+            clickAudio.play();
+            switchScreen('scan');
+            displayQuestion();
+        });
+
+        playNameBtn.addEventListener('click', () => {
+            if(nameAudio) {
+                nameAudio.play();
+            }
+        });
+
+    </script>
+</body>
+</html>
